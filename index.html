@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery UI Autocomplete - Default functionality</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function() {
+            var src = "https://en.wikipedia.org/w/api.php";
+            $("#tags").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: src,
+                        dataType: "jsonp",
+                        data: {
+                            "search": request.term,
+                            "action": "opensearch",
+                            "format": "json"
+                        },
+                        success: function(data) {
+                            console.log(data);
+
+                            var dataArr = [];
+                            for (var i = 0; i < data[1].length; i++){
+                                var dataObj = {};
+                                dataObj.label=data[1][i];
+                                dataObj.value=data[3][i];
+                                dataArr.push(dataObj);
+                            }
+                            console.log(dataArr);
+                            response(dataArr);
+                        }
+                    });
+                },
+                select: function(event,ui){
+                    window.open(ui.item.value,"_self")
+
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+
+<div class="ui-widget">
+    <label for="tags">Tags: </label>
+    <input id="tags">
+</div>
+
+
+</body>
+</html>
